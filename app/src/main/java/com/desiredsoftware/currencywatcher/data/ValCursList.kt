@@ -1,4 +1,5 @@
 package com.desiredsoftware.currencywatcher.data
+import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.ElementList
 import org.simpleframework.xml.Root
@@ -7,7 +8,11 @@ import org.simpleframework.xml.Root
     class ValCursList() {
     @set:ElementList(inline = true, required = false)
     @get:ElementList(inline = true, required = false)
-    var ValCursList: ArrayList<ValCursItem>? = null
+    var valCursList: ArrayList<ValCursItem>? = null
+
+    @set:Attribute(name = "Date", required = false)
+    @get:Attribute(name = "Date", required = false)
+    var date: String? = null
 }
 
 @Root(name="Valute")

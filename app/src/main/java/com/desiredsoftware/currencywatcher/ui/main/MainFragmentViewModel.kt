@@ -5,32 +5,40 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.desiredsoftware.currencywatcher.data.ValCursList
 import com.desiredsoftware.currencywatcher.data.api.ApiClient
+import com.desiredsoftware.currencywatcher.utils.BASE_URL
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 class MainFragmentViewModel : ViewModel() {
 
-    private val apiClient: ApiClient = ApiClient("https://www.cbr.ru/")
+    private val apiClient: ApiClient = ApiClient(BASE_URL)
 
-    var currencyResultsLD: MutableLiveData<ValCursList> = MutableLiveData()
+    var currencyResultsLD: MutableLiveData<ArrayList<ValCursList>> = MutableLiveData()
 
-    fun getCurrenciesForDate(dateForTheCurrencyReport: String) {
-        apiClient.apiService.getCurrenciesForDate(dateForTheCurrencyReport)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                { it ->
-                    currencyResultsLD.value = it
-                    Log.d(
-                        "Rx",
-                        "onComplete: ${it.toString()}")
-                },
-                { throwable ->
-                    Log.d(
-                        "Rx",
-                        "Got throwable in the getCurrenciesForDate API method: ${throwable.printStackTrace()}"
-                    )
-                    throwable.printStackTrace()
-                },)
+    fun getCurrenciesForDateRange(dateRangeForTheCurrencyReport: ArrayList<String>) {
+
+        val valCursForDateRange : ArrayList<ValCursList> = ArrayList()
+
+        Observable.fromIterable(dateRangeForTheCurrencyReport)
+                .flatMap { dateItem -> apiClient.apiService.getCurrenciesForDate(dateItem).toObservable()  }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        { currenciesRateResult ->
+                            valCursForDateRange.add(currenciesRateResult)
+                            Log.d("Rx", "onComplete in the getCurrenciesForDate API method: ${currenciesRateResult.toString()}")
+                        },
+                        { throwable ->
+                            Log.d("Rx", "Got throwable in the getCurrenciesForDate API method: ${throwable.printStackTrace()}")
+
+                        },
+                        {
+                            Log.d("Rx", "All requests for the date range was completed")
+                            currencyResultsLD.value = valCursForDateRange
+                        }
+                )
     }
 }
