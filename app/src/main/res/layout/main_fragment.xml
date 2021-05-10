@@ -27,12 +27,12 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:padding="5dp"
+        android:padding="10dp"
 
         android:hint="@string/boundary_value"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
-        android:background="@color/purple_500"
+        android:background="@color/purple_700"
         android:textAlignment="center"
         android:inputType="numberDecimal"
 
@@ -44,10 +44,11 @@
     <Spinner
         style="@style/spinnerItemStyle"
         android:id="@+id/spinnerCurrency"
-        android:background="@color/purple_500"
+        android:background="@color/purple_700"
         android:textAlignment="center"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
