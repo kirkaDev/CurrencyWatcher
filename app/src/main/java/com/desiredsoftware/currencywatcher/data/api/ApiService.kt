@@ -15,7 +15,7 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("scripts/XML_daily.asp")
-    fun getCurrenciesForDate(@Query("date_req") date: String): Single<ValCursList>
+    fun getCurrenciesForDate(@Query("date_req") date: String): Observable<ValCursList>
 
     companion object Factory {
 

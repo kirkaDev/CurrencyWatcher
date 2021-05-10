@@ -3,6 +3,10 @@ import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.ElementList
 import org.simpleframework.xml.Root
+import java.text.DateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 @Root(name = "ValCurs", strict = false)
     class ValCursList() {
@@ -10,9 +14,16 @@ import org.simpleframework.xml.Root
     @get:ElementList(inline = true, required = false)
     var valCursList: ArrayList<ValCursItem>? = null
 
+    // The closest date of updating the exchange rate to the requested date
     @set:Attribute(name = "Date", required = false)
     @get:Attribute(name = "Date", required = false)
-    var date: String? = null
+    var dateUpdated: String? = null
+
+    // Date on the string format for API call
+    var dateRequested: String? = null
+
+    // Date for ordering
+    var dateRequestedDate: Date? = null
 }
 
 @Root(name="Valute")

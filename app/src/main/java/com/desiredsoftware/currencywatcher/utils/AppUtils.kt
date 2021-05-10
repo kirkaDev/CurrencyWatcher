@@ -1,52 +1,16 @@
 package com.desiredsoftware.currencywatcher.utils
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.util.rangeTo
 import com.desiredsoftware.currencywatcher.data.ValCursList
-import kotlin.collections.ArrayList
+import java.time.LocalDate
+import java.util.*
 
-    fun GenerateMockStringsForRequest() : ArrayList<String>
-    {
-        val dateRange : ArrayList<String> = ArrayList()
-
-        dateRange.add("05/05/2021")
-        dateRange.add("03/02/2020")
-        dateRange.add("03/03/2019")
-        dateRange.add("03/04/2019")
-        dateRange.add("03/05/2019")
-        dateRange.add("03/03/2019")
-        dateRange.add("03/07/2005")
-        dateRange.add("03/09/2019")
-        dateRange.add("03/08/2019")
-        dateRange.add("03/06/2005")
-        dateRange.add("03/07/2019")
-        dateRange.add("03/03/2019")
-        dateRange.add("04/06/2019")
-        dateRange.add("03/06/2005")
-        dateRange.add("03/06/2005")
-        dateRange.add("03/03/2019")
-        dateRange.add("03/06/2005")
-        dateRange.add("03/04/2021")
-        dateRange.add("05/05/2021")
-        dateRange.add("03/02/2020")
-        dateRange.add("03/03/2019")
-        dateRange.add("03/04/2019")
-        dateRange.add("03/05/2019")
-        dateRange.add("03/03/2019")
-        dateRange.add("03/07/2005")
-        dateRange.add("03/09/2019")
-        dateRange.add("03/08/2019")
-        dateRange.add("03/06/2005")
-        dateRange.add("03/07/2019")
-        dateRange.add("03/03/2019")
-        dateRange.add("04/06/2019")
-        dateRange.add("03/06/2005")
-        dateRange.add("03/06/2005")
-        dateRange.add("03/03/2019")
-        dateRange.add("03/06/2005")
-
-        return dateRange
-    }
-
-    fun GetCurrencyValueByCharCode(currencyCharCode : String, responseValCurs : ValCursList) : Double?
+fun getCurrencyValueByCharCode(currencyCharCode: String, responseValCurs: ValCursList) : Double?
     {
         responseValCurs.valCursList?.forEach{
             if (it.charCode.equals(currencyCharCode))
@@ -56,3 +20,21 @@ import kotlin.collections.ArrayList
         }
         return 0.0
     }
+
+    fun refreshBoundaryValueOnSharedPrefs(context: Context, boundaryValue: String)
+    {
+        var sharedPreferences : SharedPreferences =  context.getSharedPreferences(
+                SHARED_PREFERENCES_BOUNDARY_VALUE,
+                Context.MODE_PRIVATE
+        )
+
+        val editor = sharedPreferences.edit()
+        editor.putFloat(SHARED_PREFERENCES_BOUNDARY_VALUE, boundaryValue.toFloat()).apply()
+
+        val boundary : Float = sharedPreferences.getFloat(SHARED_PREFERENCES_BOUNDARY_VALUE, 0.0f)
+        Log.d("Shared preferences", "Read boundary value is: $boundary")
+    }
+
+
+
+

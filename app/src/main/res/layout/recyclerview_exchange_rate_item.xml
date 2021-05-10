@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="5dp"
     android:layout_marginTop="20dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp">
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,18 +19,25 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textViewDate"
+            android:id="@+id/textViewRequestedDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="18sp"
             android:textStyle="bold"
+            tools:text="Date: 21.01.2021">
+        </TextView>
+        <TextView
+            android:id="@+id/textViewUpdatedDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
             tools:text="Date: 21.01.1991">
         </TextView>
         <TextView
             android:id="@+id/textViewExchangeRate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="18sp"
             tools:text="10.5">
         </TextView>
     </LinearLayout>

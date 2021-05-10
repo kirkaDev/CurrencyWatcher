@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="currencies_spinner_items_array">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>CNY</item>
+        <item>JPY</item>
+        <item>BYN</item>
+    </string-array>
+</resources>

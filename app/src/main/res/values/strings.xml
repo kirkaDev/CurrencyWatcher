@@ -1,5 +1,13 @@
 <resources>
-    <string name="app_name">CurrencyWatcher</string>
+    <string name="app_name">Currency Watcher</string>
     <string name="update_exchange_rates">Update exchange rates</string>
     <string name="boundary_value">Enter your boundary value</string>
+    <string name="requested_date">Requested date: \u0020</string>
+    <string name="update_date">Update date: \u0020</string>
+    <string name="currency_unit">1 \u0020</string>
+    <string name="equal_sign">\u0020 = \u0020</string>
+    <string name="rub_currency">\u0020 RUR</string>
+    <string name="boundary_exceeded_title">Максимальное значение превышено\u0020</string>
+
+
 </resources>
