@@ -3,8 +3,6 @@ package com.desiredsoftware.currencywatcher.utils
 import java.util.concurrent.TimeUnit
 
 const val BASE_URL : String = "https://www.cbr.ru/"
-
-
 //Shared preferences
 const val SHARED_PREFERENCES_BOUNDARY_VALUE = "BOUNDARY_VALUE"
 
@@ -19,6 +17,9 @@ const val DELAY_INTERVAL_WORKER = 5L
 
 // Settings for the notifications
 const val CHANNEL_ID: String = "MY_CHANNEL_ID"
+const val CHANNEL_NAME: String = "Channel for boundary value notifications"
+const val CHANNEL_DESCRIPTION: String = "Boundary value was exceeded"
+
 
 
 
