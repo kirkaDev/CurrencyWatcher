@@ -23,7 +23,7 @@ import kotlin.collections.ArrayList
     var dateRequested: String? = null
 
     // Date for ordering
-    var dateRequestedDate: Date? = null
+    var dateRequestedDate: Calendar? = null
 }
 
 @Root(name="Valute")
@@ -49,4 +49,3 @@ class ValCursItem()
     @get:Element(name = "Value")
     var value: String? = null
 }
-

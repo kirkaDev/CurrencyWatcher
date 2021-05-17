@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-fun convertDateFormatForApiCall(date: Calendar) : String
+fun convertCalendarDateFormatForApiCall(date: Calendar) : String
 {
     var day = date.get(Calendar.DAY_OF_MONTH).toString()
     var month = (date.get(Calendar.MONTH)+1).toString()  // The day in the month starts from 0
@@ -26,23 +26,24 @@ fun convertDateFormatForApiCall(date: Calendar) : String
             .plus(year)
 }
 
-fun parseStringToDate(stringToParse: String) : Date
+fun parseStringToDate(stringToParse: String) : Calendar
 {
     val pattern = "dd/MM/yyyy"
     val dateFormat : SimpleDateFormat = SimpleDateFormat(pattern)
 
-    val date : Date = dateFormat.parse(stringToParse)
+    val calendarDate : Calendar = Calendar.getInstance()
+    calendarDate.time = dateFormat.parse(stringToParse)
 
-    return date
+    return calendarDate
 }
 
 fun getDaysLastMonth() : ArrayList<String>
 {
-    var dateList : ArrayList<String> = ArrayList()
+    val dateList : ArrayList<String> = ArrayList()
 
-    var currentDate = Calendar.getInstance()
+    val currentDate = Calendar.getInstance()
 
-    var dateForDaysInMonthComputing = Calendar.getInstance()
+    val dateForDaysInMonthComputing = Calendar.getInstance()
 
     // It will be size of list for currencies rates showing in the last month
     val daysOnPreviousMonth : Int
@@ -52,24 +53,7 @@ fun getDaysLastMonth() : ArrayList<String>
 
     for (i in 0..(daysOnPreviousMonth-1))
     {
-        dateList.add(convertDateFormatForApiCall(currentDate))
-
-        currentDate.add(Calendar.DAY_OF_MONTH, -1)
-    }
-
-    return dateList
-}
-
-fun getLastDays(daysNumber: Int) : ArrayList<String>
-{
-    var dateList : ArrayList<String> = ArrayList()
-
-    var currentDate = Calendar.getInstance()
-
-
-    for (i in 0..(daysNumber-1))
-    {
-        dateList.add(convertDateFormatForApiCall(currentDate))
+        dateList.add(convertCalendarDateFormatForApiCall(currentDate))
 
         currentDate.add(Calendar.DAY_OF_MONTH, -1)
     }

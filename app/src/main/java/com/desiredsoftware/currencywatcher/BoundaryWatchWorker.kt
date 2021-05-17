@@ -24,8 +24,8 @@ class BoundaryWatchWorker(context: Context, workerParams: WorkerParameters) : Wo
     override fun doWork(): Result {
         Log.d("Work manager", "Work manager's method doWork() started")
 
-        val apiClient: ApiClient = ApiClient(BASE_URL)
-        val dateToday : String = convertDateFormatForApiCall(Calendar.getInstance())
+        val apiClient = ApiClient(BASE_URL)
+        val dateToday : String = convertCalendarDateFormatForApiCall(Calendar.getInstance())
         val currencyCharCode = inputData.getString(CURRENCY_CHAR_CODE_INPUT_DATA_WORKER)
 
         val observable = apiClient.apiService.getCurrenciesForDate(dateToday)
@@ -34,16 +34,16 @@ class BoundaryWatchWorker(context: Context, workerParams: WorkerParameters) : Wo
             .subscribe(
                     {
                         valCursList ->
-                        var sharedPreferences: SharedPreferences = context.getSharedPreferences(
+                        val sharedPreferences: SharedPreferences = context.getSharedPreferences(
                                 SHARED_PREFERENCES_BOUNDARY_VALUE,
                                 Context.MODE_PRIVATE
                         )
 
-                        var boundaryValue: Float = sharedPreferences.getFloat(SHARED_PREFERENCES_BOUNDARY_VALUE, 0.0f)
+                        val boundaryValue: Float = sharedPreferences.getFloat(SHARED_PREFERENCES_BOUNDARY_VALUE, 0.0f)
                         Log.d("Shared preferences", "Read boundary value is: ${boundaryValue}")
                         Log.d("Work manager", "Today currency rate is : ${currencyCharCode?.let { getCurrencyValueByCharCode(it, valCursList) }}" + " RUR")
 
-                        if (currencyCharCode?.let { getCurrencyValueByCharCode(it, valCursList) }!! > boundaryValue!!) {
+                        if (currencyCharCode?.let { getCurrencyValueByCharCode(it, valCursList) }!! > boundaryValue) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                                 val newMessageNotification = Notification.Builder(context, CHANNEL_ID)
