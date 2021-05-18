@@ -8,20 +8,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.desiredsoftware.currencywatcher.BoundaryWatchWorker
 import com.desiredsoftware.currencywatcher.R
+import com.desiredsoftware.currencywatcher.databinding.MainFragmentBinding
 import com.desiredsoftware.currencywatcher.utils.*
 import java.util.concurrent.TimeUnit
 
@@ -35,10 +36,8 @@ class MainFragment : Fragment() {
     private lateinit var fragmentViewModel: MainFragmentViewModel
     private lateinit var currenciesInfoAdapter: CurrenciesInfoRecyclerViewAdapter
 
-    private lateinit var recyclerViewExchangeRate : RecyclerView
-    private lateinit var spinnerCurrency : Spinner
-
-    private lateinit var progressBar : ProgressBar
+    private var _binding : MainFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -47,9 +46,8 @@ class MainFragment : Fragment() {
 
         fragmentViewModel = ViewModelProvider(this).get(MainFragmentViewModel::class.java)
 
-        val root = inflater.inflate(R.layout.main_fragment, container, false)
-        val button : Button = root.findViewById(R.id.button)
-        val editTextBoundaryValue : EditText = root.findViewById(R.id.editTextBoundaryValue)
+        _binding = MainFragmentBinding.inflate(inflater, container, false)
+        val view = binding.root
 
         fragmentViewModel.boundaryValueLD.value = requireContext().getSharedPreferences(
                 SHARED_PREFERENCES_BOUNDARY_VALUE,
@@ -59,15 +57,11 @@ class MainFragment : Fragment() {
 
         if (fragmentViewModel.boundaryValueLD.value!=0.0f)
         {
-            editTextBoundaryValue.setText(fragmentViewModel.boundaryValueLD.value.toString())
+            binding.editTextBoundaryValue.setText(fragmentViewModel.boundaryValueLD.value.toString())
         }
 
-        spinnerCurrency = root.findViewById(R.id.spinnerCurrency)
-        recyclerViewExchangeRate = root.findViewById(R.id.recyclerViewExchangeRate)
-        progressBar = root.findViewById(R.id.progressBar)
-
-        button.setOnClickListener {
-            progressBar.isVisible = true
+        binding.button.setOnClickListener {
+            binding.progressBar.isVisible = true
             fragmentViewModel.getCurrenciesForDateRange(getDaysLastMonth())
         }
 
@@ -78,10 +72,10 @@ class MainFragment : Fragment() {
                 android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerCurrency.adapter = adapter
+            binding.spinnerCurrency.adapter = adapter
         }
 
-        spinnerCurrency.onItemSelectedListener = object : OnItemSelectedListener {
+        binding.spinnerCurrency.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedCurrency = parent.getItemAtPosition(position).toString()
                 fragmentViewModel.currencyForShowingLD.value = selectedCurrency
@@ -91,7 +85,7 @@ class MainFragment : Fragment() {
         }
 
 
-        editTextBoundaryValue.addTextChangedListener(object : TextWatcher {
+        binding.editTextBoundaryValue.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 Log.d("Edit text", "Text was edited")
                 setWorker(REPEAT_TIME_UNIT_FOR_WORKER, REPEAT_INTERVAL_WORKER, DELAY_TIME_UNIT_WORKER, DELAY_INTERVAL_WORKER)
@@ -106,30 +100,30 @@ class MainFragment : Fragment() {
             ) {
                 Log.d(
                         "Shared preferences",
-                        "Refresh boundary value on the shared preferences: " + editTextBoundaryValue.text.toString()
+                        "Refresh boundary value on the shared preferences: " + binding.editTextBoundaryValue.text.toString()
                 )
 
                 if (s.isNotEmpty())
-                    refreshBoundaryValueOnSharedPrefs(requireContext(), editTextBoundaryValue.text.toString())
+                    refreshBoundaryValueOnSharedPrefs(requireContext(), binding.editTextBoundaryValue.text.toString())
             }
         })
 
         fragmentViewModel.getCurrenciesForDateRange(getDaysLastMonth())
-        progressBar.isVisible = true
+        binding.progressBar.isVisible = true
 
-        return root
+        return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         fragmentViewModel.currencyResultsLD.observe(viewLifecycleOwner, Observer {
-            progressBar.isVisible = false
+            binding.progressBar.isVisible = false
             currenciesInfoAdapter = fragmentViewModel.currencyForShowingLD.value?.let { it1 ->
                 CurrenciesInfoRecyclerViewAdapter(requireContext(),
                         it, it1)
             }!!
-            recyclerViewExchangeRate.adapter = currenciesInfoAdapter
-            recyclerViewExchangeRate.layoutManager = GridLayoutManager(context, 1)
+            binding.recyclerViewExchangeRate.adapter = currenciesInfoAdapter
+            binding.recyclerViewExchangeRate.layoutManager = GridLayoutManager(context, 1)
         })
 
         fragmentViewModel.currencyForShowingLD.observe(viewLifecycleOwner, Observer {
@@ -138,6 +132,11 @@ class MainFragment : Fragment() {
         })
 
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     fun setWorker(repeatTimeUnit : TimeUnit, repeatInterval : Long, delayTimeUnit : TimeUnit, delayInterval : Long)
